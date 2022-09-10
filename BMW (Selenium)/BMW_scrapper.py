@@ -33,12 +33,11 @@ driver.maximize_window()
 # Scraping the data
 def scrape():
     i=1
-
+    # Itreating over all the cars on page one by one
     while i<=50:
 
-        # if i == 2:
-        #     i+=1
         print("Car " + str(i))
+        # Waiting for element to load it completely.
         WebDriverWait(driver, 15).until(EC.visibility_of_element_located((By.XPATH, '//div['+str(i)+']/div[1]/div[2]/div[1]/p')))
         title = driver.find_element_by_xpath('//div['+str(i)+']/div[1]/div[2]/div[1]/p').text
         model = driver.find_element_by_xpath('//div['+str(i)+']/div[1]/div[2]/div[1]/h2/a').text
@@ -52,9 +51,11 @@ def scrape():
         regNumber =  driver.find_element_by_xpath('//div['+str(i)+']/div[1]/div[2]/div[1]/ul/li[4]/span').text
         registerDate =  driver.find_element_by_xpath('//div['+str(i)+']/div[1]/div[2]/div[1]/ul/li[3]/span').text
 
+        # Maybe Scrolling to next car div
         link = WebDriverWait(driver, 15).until(EC.visibility_of_element_located((By.XPATH, '//div[contains(@class, "uvl-c-advert--results")]['+str(i)+']')))
         driver.execute_script("arguments[0].scrollIntoView();", link)
         time.sleep(0.2)
+        
         try:
             image =  driver.find_element_by_xpath('//div['+str(i)+']/div[1]/div[1]/div/div[1]/a/img')
             imageURL = image.get_attribute("src")
@@ -84,11 +85,8 @@ page = 88
 
 while True:
     try:
-        print(loop)
         if page == 252:
             break
-        # time.sleep(1)
-        # https://usedcars.bmw.co.uk/result/?page=88&size=50&source=home
         driver.get('https://usedcars.bmw.co.uk/result/?page='+str(page)+'&size=50&source=home')
         time.sleep(5)
         scrape()
